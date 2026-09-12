@@ -90,8 +90,9 @@ async function generateArticle(keyword) {
   '---\n' +
   '3. SEO/AEO Formatting: Write Markdown content using ## and ###. Include an "Executive Summary" at the top. Use bullet points and bold text for AEO (AI engines love this). End with a strong FAQ section.\n' +
   '4. GEO Optimization: If the keyword is location-based, weave in deep local context. If general, use globally applicable examples.\n' +
-  '5. Include EXACTLY 2 in-article image placeholders formatted as: <!-- IN_ARTICLE_IMAGE: "1 simple generic stock photo word" -->. For example, if the section is about business, use <!-- IN_ARTICLE_IMAGE: "office" -->. If it is about cats, use <!-- IN_ARTICLE_IMAGE: "kitten" -->. Do NOT use complex phrases.\n' +
-  '6. Do NOT wrap in markdown code blocks.';
+  '5. Linking Strategy: Include at least 2 high-authority EXTERNAL links (e.g. Wikipedia, Forbes, official .gov/.edu sources) naturally in the text. Include exactly 2 INTERNAL links using relative paths (e.g., `/` for the homepage or `/blog` for more articles).\n' +
+  '6. Include EXACTLY 2 in-article image placeholders formatted as: <!-- IN_ARTICLE_IMAGE: "1 simple generic stock photo word" -->. For example, if the section is about business, use <!-- IN_ARTICLE_IMAGE: "office" -->. If it is about cats, use <!-- IN_ARTICLE_IMAGE: "kitten" -->. Do NOT use complex phrases.\n' +
+  '7. Do NOT wrap in markdown code blocks.';
 
   const response = await ai.models.generateContent({
     model: 'gemini-3.5-flash',
