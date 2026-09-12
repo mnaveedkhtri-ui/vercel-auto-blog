@@ -2,7 +2,7 @@
 title: "The Ultimate Guide on How to Improve Cat Mental Health"
 description: "Is your feline friend feeling down or stressed? Discover science-backed, actionable steps on how to improve cat mental health and prevent feline depression."
 pubDate: "Sep 12, 2026"
-heroImage: "/images/fallback.jpg"
+heroImage: "../../assets/blog-placeholder-1.jpg"
 ---
 
 Cats are often stereotyped as independent, aloof, and low-maintenance pets that are perfectly content sleeping on a sunny windowsill for eighteen hours a day. However, beneath that calm, mysterious exterior lies a highly sensitive animal with complex emotional and psychological needs. 

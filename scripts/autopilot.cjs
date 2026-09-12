@@ -10,7 +10,7 @@ dotenv.config();
 
 const STATE_FILE = path.join(__dirname, '..', 'config', 'state.json');
 const BLOG_DIR = path.join(__dirname, '..', 'src', 'content', 'blog');
-const IMAGES_DIR = path.join(__dirname, '..', 'public', 'images');
+const IMAGES_DIR = path.join(__dirname, '..', 'src', 'assets');
 
 if (!fs.existsSync(BLOG_DIR)) fs.mkdirSync(BLOG_DIR, { recursive: true });
 if (!fs.existsSync(IMAGES_DIR)) fs.mkdirSync(IMAGES_DIR, { recursive: true });
@@ -68,7 +68,7 @@ async function fetchPixabayImage(keyword, slug) {
         .jpeg({ quality: 90 })
         .toFile(filePath);
         
-      return '/images/' + fileName; 
+      return '../../assets/' + fileName; 
     }
   } catch (e) {
     console.error("Pixabay fetch failed:", e.message);
@@ -100,24 +100,24 @@ async function generateArticle(keyword) {
 }
 
 async function run() {
-  console.log("?? Starting Vercel Auto-Pilot Agent...");
+  console.log("🚀 Starting Vercel Auto-Pilot Agent...");
   
   const topicObj = await getNextTopic();
   if (!topicObj) {
-    console.log("? No new keywords found in sheet.");
+    console.log("✅ No new keywords found in sheet.");
     return;
   }
   
   const { keyword } = topicObj;
-  console.log("?? Processing keyword: " + keyword);
+  console.log("📝 Processing keyword: " + keyword);
   
   const slug = createSlug(keyword);
-  console.log("?? Generating Article via Gemini...");
+  console.log("🧠 Generating Article via Gemini...");
   let markdown = await generateArticle(keyword);
   
   console.log("📸 Fetching Pixabay cover image...");
   const imagePath = await fetchPixabayImage(keyword, slug);
-  const finalImagePath = imagePath || '/images/fallback.jpg'; 
+  const finalImagePath = imagePath || '../../assets/blog-placeholder-1.jpg'; 
   
   markdown = markdown.replace(/heroImage:\s*["']IMAGE_PLACEHOLDER["']/, 'heroImage: "' + finalImagePath + '"');
   
