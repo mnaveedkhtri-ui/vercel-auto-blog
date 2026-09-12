@@ -146,3 +146,4 @@ main { max-width: 800px; margin: 0 auto; }
 .prose h2, .prose h3 { color: #f8fafc; }
 .prose p { color: #cbd5e1; line-height: 1.8; }
 .prose { font-size: 1.125rem; }
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 { color: #f8fafc !important; } .prose p, .prose ul, .prose ol, .prose li { color: #cbd5e1 !important; line-height: 1.8; font-size: 1.125rem; } .prose strong, .prose b { color: #f8fafc !important; }

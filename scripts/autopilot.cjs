@@ -49,24 +49,29 @@ async function getNextTopic() {
   return null;
 }
 
-async function fetchAIImage(keyword, slug) {
-  const cleanKeyword = encodeURIComponent(keyword + " photorealistic, 8k, highly detailed, magazine quality");
-  const url = 'https://image.pollinations.ai/prompt/' + cleanKeyword + '?width=1024&height=576&model=turbo&nologo=true';
+async function fetchPixabayImage(keyword, slug) {
+  const PIXABAY_KEY = '57489676-b13e0fe261e37ca2f22f32abb';
+  const cleanKeyword = keyword.split(' ').slice(0, 2).join('+');
+  const url = 'https://pixabay.com/api/?key=' + PIXABAY_KEY + '&q=' + cleanKeyword + '&image_type=photo&orientation=horizontal&min_width=1280&safesearch=true';
   
   try {
-    console.log("Downloading AI Image from:", url);
-    const imgRes = await axios.get(url, { responseType: 'arraybuffer', timeout: 30000 });
-    
-    const fileName = slug + '.jpg';
-    const filePath = path.join(IMAGES_DIR, fileName);
-    
-    await sharp(Buffer.from(imgRes.data))
-      .jpeg({ quality: 90 })
-      .toFile(filePath);
+    const res = await axios.get(url, { timeout: 15000 });
+    if (res.data.hits && res.data.hits.length > 0) {
+      const imageUrl = res.data.hits[0].largeImageURL;
+      const imgRes = await axios.get(imageUrl, { responseType: 'arraybuffer' });
       
-    return '../../assets/' + fileName; 
+      const fileName = slug + '.jpg';
+      const filePath = path.join(IMAGES_DIR, fileName);
+      
+      await sharp(Buffer.from(imgRes.data))
+        .resize({ width: 1280, height: 720, fit: 'cover' })
+        .jpeg({ quality: 90 })
+        .toFile(filePath);
+        
+      return '../../assets/' + fileName; 
+    }
   } catch (e) {
-    console.error("AI fetch failed:", e.message);
+    console.error("Pixabay fetch failed:", e.message);
   }
   return null; 
 }
@@ -84,7 +89,7 @@ async function generateArticle(keyword) {
   'heroImage: "IMAGE_PLACEHOLDER"\n' +
   '---\n' +
   '3. After frontmatter, write Markdown content using ## and ###.\n' +
-  '4. Include EXACTLY 2 in-article image placeholders formatted as: <!-- IN_ARTICLE_IMAGE: "short 2 word keyword" -->\n' +
+  '4. Include EXACTLY 2 in-article image placeholders formatted as: <!-- IN_ARTICLE_IMAGE: "1 simple generic stock photo word" -->. For example, if the section is about business, use <!-- IN_ARTICLE_IMAGE: "office" -->. If it is about cats, use <!-- IN_ARTICLE_IMAGE: "kitten" -->. Do NOT use complex phrases.\n' +
   '5. Do NOT wrap in markdown code blocks.';
 
   const response = await ai.models.generateContent({
@@ -112,7 +117,7 @@ async function run() {
   let markdown = await generateArticle(keyword);
   
   console.log("📸 Fetching Pixabay cover image...");
-  const imagePath = await fetchAIImage(keyword, slug + '-cover');
+  const imagePath = await fetchPixabayImage(keyword, slug + '-cover');
   const finalImagePath = imagePath || '../../assets/blog-placeholder-1.jpg'; 
   
   markdown = markdown.replace(/heroImage:\s*["']IMAGE_PLACEHOLDER["']/, 'heroImage: "' + finalImagePath + '"');
@@ -122,8 +127,8 @@ async function run() {
   let counter = 1;
   while ((match = regex.exec(markdown)) !== null) {
     const imgKeyword = match[1];
-    console.log("📸 Fetching in-article image for:", imgKeyword);
-    const inArtPath = await fetchAIImage(imgKeyword, slug + '-' + counter);
+    console.log("⏳ Waiting 5s..."); await new Promise(r => setTimeout(r, 5000)); console.log("📸 Fetching in-article image for:", imgKeyword);
+    const inArtPath = await fetchPixabayImage(imgKeyword, slug + '-' + counter);
     if (inArtPath) {
       markdown = markdown.replace(match[0], '![' + imgKeyword + '](' + inArtPath + ')');
     } else {
