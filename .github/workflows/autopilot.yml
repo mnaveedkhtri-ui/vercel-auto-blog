@@ -1,0 +1,27 @@
+name: Auto-Pilot SEO Agent
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: npm install axios dotenv sharp @google/genai csv-parse
+      - name: Run Auto-Pilot Agent
+        run: node scripts/autopilot.cjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_SHEET_CSV_URL: ${{ secrets.GOOGLE_SHEET_CSV_URL }}
+      - name: Commit and Push new Article
+        run: |
+          git config --global user.name "Antigravity SEO Agent"
+          git config --global user.email "bot@antigravity.ai"
+          git add .
+          git commit -m "feat: auto-published new SEO article via Agent" || echo "No changes"
+          git push
