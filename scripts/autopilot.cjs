@@ -79,18 +79,19 @@ async function fetchPixabayImage(keyword, slug) {
 async function generateArticle(keyword) {
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  const prompt = 'You are an elite SEO content writer. Write a highly optimized, 1000+ word blog post targeting the keyword: "' + keyword + '".\n' +
+  const prompt = 'You are an elite SEO, GEO, and AEO (Answer Engine Optimization) content writer. Write a highly optimized, 1500+ word blog post targeting the keyword: "' + keyword + '".\n' +
   '1. Output EXACTLY a valid Markdown file containing YAML frontmatter at the very top.\n' +
   '2. Format:\n' +
   '---\n' +
   'title: "Catchy SEO Title"\n' +
-  'description: "Meta description"\n' +
+  'description: "AEO optimized meta description answering the user intent directly"\n' +
   'pubDate: "' + dateStr + '"\n' +
   'heroImage: "IMAGE_PLACEHOLDER"\n' +
   '---\n' +
-  '3. After frontmatter, write Markdown content using ## and ###.\n' +
-  '4. Include EXACTLY 2 in-article image placeholders formatted as: <!-- IN_ARTICLE_IMAGE: "1 simple generic stock photo word" -->. For example, if the section is about business, use <!-- IN_ARTICLE_IMAGE: "office" -->. If it is about cats, use <!-- IN_ARTICLE_IMAGE: "kitten" -->. Do NOT use complex phrases.\n' +
-  '5. Do NOT wrap in markdown code blocks.';
+  '3. SEO/AEO Formatting: Write Markdown content using ## and ###. Include an "Executive Summary" at the top. Use bullet points and bold text for AEO (AI engines love this). End with a strong FAQ section.\n' +
+  '4. GEO Optimization: If the keyword is location-based, weave in deep local context. If general, use globally applicable examples.\n' +
+  '5. Include EXACTLY 2 in-article image placeholders formatted as: <!-- IN_ARTICLE_IMAGE: "1 simple generic stock photo word" -->. For example, if the section is about business, use <!-- IN_ARTICLE_IMAGE: "office" -->. If it is about cats, use <!-- IN_ARTICLE_IMAGE: "kitten" -->. Do NOT use complex phrases.\n' +
+  '6. Do NOT wrap in markdown code blocks.';
 
   const response = await ai.models.generateContent({
     model: 'gemini-3.5-flash',
