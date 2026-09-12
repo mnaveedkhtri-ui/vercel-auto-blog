@@ -50,7 +50,7 @@ async function getNextTopic() {
 }
 
 async function fetchPixabayImage(keyword, slug) {
-  const PIXABAY_KEY = process.env.PIXABAY_API_KEY;
+  const PIXABAY_KEY = '57489676-b13e0fe261e37ca2f22f32abb';
   const cleanKeyword = keyword.split(' ').slice(0, 3).join('+');
   const url = 'https://pixabay.com/api/?key=' + PIXABAY_KEY + '&q=' + cleanKeyword + '&image_type=photo&orientation=horizontal&min_width=1280&safesearch=true';
   
@@ -115,9 +115,9 @@ async function run() {
   console.log("?? Generating Article via Gemini...");
   let markdown = await generateArticle(keyword);
   
-  console.log("?? Fetching Pixabay cover image...");
+  console.log("📸 Fetching Pixabay cover image...");
   const imagePath = await fetchPixabayImage(keyword, slug);
-  const finalImagePath = imagePath || '/blog-placeholder-1.jpg'; 
+  const finalImagePath = imagePath || '/images/fallback.jpg'; 
   
   markdown = markdown.replace(/heroImage:\s*["']IMAGE_PLACEHOLDER["']/, 'heroImage: "' + finalImagePath + '"');
   
