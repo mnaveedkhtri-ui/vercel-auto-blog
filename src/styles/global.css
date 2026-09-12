@@ -5,9 +5,9 @@
  */
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
+	--accent: #3b82f6;
+	--accent-dark: #60a5fa;
+	--black: #f8fafc;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
@@ -139,3 +139,10 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+
+body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+header { background: #1e293b; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border-bottom: none; }
+main { max-width: 800px; margin: 0 auto; }
+.prose h2, .prose h3 { color: #f8fafc; }
+.prose p { color: #cbd5e1; line-height: 1.8; }
+.prose { font-size: 1.125rem; }

@@ -89,7 +89,8 @@ async function generateArticle(keyword) {
   'heroImage: "IMAGE_PLACEHOLDER"\n' +
   '---\n' +
   '3. After frontmatter, write Markdown content using ## and ###.\n' +
-  '4. Do NOT wrap in markdown code blocks.';
+  '4. Include EXACTLY 2 in-article image placeholders formatted as: <!-- IN_ARTICLE_IMAGE: "short 2 word keyword" -->\n' +
+  '5. Do NOT wrap in markdown code blocks.';
 
   const response = await ai.models.generateContent({
     model: 'gemini-3.5-flash',
@@ -116,10 +117,25 @@ async function run() {
   let markdown = await generateArticle(keyword);
   
   console.log("📸 Fetching Pixabay cover image...");
-  const imagePath = await fetchPixabayImage(keyword, slug);
+  const imagePath = await fetchPixabayImage(keyword, slug + '-cover');
   const finalImagePath = imagePath || '../../assets/blog-placeholder-1.jpg'; 
   
   markdown = markdown.replace(/heroImage:\s*["']IMAGE_PLACEHOLDER["']/, 'heroImage: "' + finalImagePath + '"');
+  
+  const regex = /<!-- IN_ARTICLE_IMAGE:\s*"([^"]+)"\s*-->/g;
+  let match;
+  let counter = 1;
+  while ((match = regex.exec(markdown)) !== null) {
+    const imgKeyword = match[1];
+    console.log("📸 Fetching in-article image for:", imgKeyword);
+    const inArtPath = await fetchPixabayImage(imgKeyword, slug + '-' + counter);
+    if (inArtPath) {
+      markdown = markdown.replace(match[0], '![' + imgKeyword + '](' + inArtPath + ')');
+    } else {
+      markdown = markdown.replace(match[0], '');
+    }
+    counter++;
+  }
   
   if (markdown.startsWith('`markdown')) {
     markdown = markdown.replace(/^`markdown\n/, '').replace(/\n`$/, '');
